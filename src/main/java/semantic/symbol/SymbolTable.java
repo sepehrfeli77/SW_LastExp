@@ -4,8 +4,8 @@ package semantic.symbol;
 import codeGenerator.Address;
 import codeGenerator.Memory;
 import codeGenerator.TypeAddress;
-import codeGenerator.varType;
-import errorHandler.ErrorHandler;
+import codeGenerator.VarType;
+import errorHandler.ErrorHandlerHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,8 +21,8 @@ public class SymbolTable {
         mem = memory;
         klasses = new HashMap<>();
         keyWords = new HashMap<>();
-        keyWords.put("true", new Address(1, varType.Bool, TypeAddress.Imidiate));
-        keyWords.put("false", new Address(0, varType.Bool, TypeAddress.Imidiate));
+        keyWords.put("true", new Address(1, VarType.Bool, TypeAddress.Imidiate));
+        keyWords.put("false", new Address(0, VarType.Bool, TypeAddress.Imidiate));
     }
 
     public void setLastType(SymbolType type) {
@@ -31,7 +31,7 @@ public class SymbolTable {
 
     public void addClass(String className) {
         if (klasses.containsKey(className)) {
-            ErrorHandler.printError("This class already defined");
+            ErrorHandlerHelper.printError("This class already defined");
         }
         klasses.put(className, new Klass());
     }
@@ -42,7 +42,7 @@ public class SymbolTable {
 
     public void addMethod(String className, String methodName, int address) {
         if (klasses.get(className).Methodes.containsKey(methodName)) {
-            ErrorHandler.printError("This method already defined");
+            ErrorHandlerHelper.printError("This method already defined");
         }
         klasses.get(className).Methodes.put(methodName, new Method(address, lastType));
     }
@@ -54,7 +54,7 @@ public class SymbolTable {
     public void addMethodLocalVariable(String className, String methodName, String localVariableName) {
 //        try {
             if (klasses.get(className).Methodes.get(methodName).localVariable.containsKey(localVariableName)) {
-                ErrorHandler.printError("This variable already defined");
+                ErrorHandlerHelper.printError("This variable already defined");
             }
             klasses.get(className).Methodes.get(methodName).localVariable.put(localVariableName, new Symbol(lastType, mem.getDateAddress()));
 //        }catch (NullPointerException e){
