@@ -79,6 +79,9 @@ public class Parser {
           case accept:
             finish = true;
             break;
+          default:
+            ErrorHandler.printError("Action not defined");
+            break;
         }
         Log.print("");
 

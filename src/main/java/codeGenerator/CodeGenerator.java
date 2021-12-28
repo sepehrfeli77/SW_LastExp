@@ -131,6 +131,8 @@ public class CodeGenerator {
             case 33:
                 defMain();
                 break;
+            default:
+                ErrorHandler.printError("Function not defined");
         }
     }
 
@@ -163,14 +165,11 @@ public class CodeGenerator {
             try {
 
                 Symbol s = symbolTable.get(className, methodName, next.value);
-                varType t = varType.Int;
-                switch (s.type) {
-                    case Bool:
-                        t = varType.Bool;
-                        break;
-                    case Int:
-                        t = varType.Int;
-                        break;
+                varType t;
+                if (s.type == SymbolType.Bool) {
+                    t = varType.Bool;
+                } else {
+                    t = varType.Int;
                 }
                 ss.push(new Address(s.address, t));
 
@@ -191,14 +190,11 @@ public class CodeGenerator {
         ss.pop();
 
         Symbol s = symbolTable.get(symbolStack.pop(), symbolStack.pop());
-        varType t = varType.Int;
-        switch (s.type) {
-            case Bool:
-                t = varType.Bool;
-                break;
-            case Int:
-                t = varType.Int;
-                break;
+        varType t;
+        if (s.type == SymbolType.Bool) {
+            t = varType.Bool;
+        } else {
+            t = varType.Int;
         }
         ss.push(new Address(s.address, t));
 
@@ -233,23 +229,19 @@ public class CodeGenerator {
             symbolTable.getNextParam(className, methodName);
             ErrorHandler.printError("The few argument pass for method");
         } catch (IndexOutOfBoundsException e) {}
-            varType t = varType.Int;
-            switch (symbolTable.getMethodReturnType(className, methodName))
-            {
-                case Int:
-                    t = varType.Int;
-                    break;
-                case Bool:
-                    t = varType.Bool;
-                    break;
-            }
-            Address temp = new Address(memory.getTemp(),t);
-            ss.push(temp);
-            memory.add3AddressCode(Operation.ASSIGN, new Address(temp.num, varType.Address, TypeAddress.Imidiate), new Address(symbolTable.getMethodReturnAddress(className, methodName), varType.Address), null);
-            memory.add3AddressCode(Operation.ASSIGN, new Address(memory.getCurrentCodeBlockAddress() + 2, varType.Address, TypeAddress.Imidiate), new Address(symbolTable.getMethodCallerAddress(className, methodName), varType.Address), null);
-            memory.add3AddressCode(Operation.JP, new Address(symbolTable.getMethodAddress(className, methodName), varType.Address), null, null);
+        varType t;
+        if (symbolTable.getMethodReturnType(className, methodName) == SymbolType.Int) {
+            t = varType.Int;
+        } else {
+            t = varType.Bool;
+        }
+        Address temp = new Address(memory.getTemp(),t);
+        ss.push(temp);
+        memory.add3AddressCode(Operation.ASSIGN, new Address(temp.num, varType.Address, TypeAddress.Imidiate), new Address(symbolTable.getMethodReturnAddress(className, methodName), varType.Address), null);
+        memory.add3AddressCode(Operation.ASSIGN, new Address(memory.getCurrentCodeBlockAddress() + 2, varType.Address, TypeAddress.Imidiate), new Address(symbolTable.getMethodCallerAddress(className, methodName), varType.Address), null);
+        memory.add3AddressCode(Operation.JP, new Address(symbolTable.getMethodAddress(className, methodName), varType.Address), null, null);
 
-            //symbolStack.pop();
+        //symbolStack.pop();
 
 
     }
@@ -261,14 +253,11 @@ public class CodeGenerator {
 //        String className = symbolStack.pop();
         try {
             Symbol s = symbolTable.getNextParam(callStack.peek(), methodName);
-            varType t = varType.Int;
-            switch (s.type) {
-                case Bool:
-                    t = varType.Bool;
-                    break;
-                case Int:
-                    t = varType.Int;
-                    break;
+            varType t;
+            if (s.type == SymbolType.Bool) {
+                t = varType.Bool;
+            } else {
+                t = varType.Int;
             }
             Address param = ss.pop();
             if (param.varType != t) {
@@ -449,11 +438,8 @@ public class CodeGenerator {
         Address s = ss.pop();
         SymbolType t = symbolTable.getMethodReturnType(symbolStack.peek(), methodName);
         varType temp = varType.Int;
-        switch (t) {
-            case Int:
-                break;
-            case Bool:
-                temp = varType.Bool;
+        if (t == SymbolType.Bool) {
+            temp = varType.Bool;
         }
         if (s.varType != temp) {
             ErrorHandler.printError("The type of method and return address was not match");
