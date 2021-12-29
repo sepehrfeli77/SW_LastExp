@@ -91,7 +91,7 @@ public class CodeGenerator {
                 equal();
                 break;
             case 20:
-                lessThan();
+                less_than();
                 break;
             case 21:
                 and();
@@ -155,7 +155,7 @@ public class CodeGenerator {
     public void checkID() {
         symbolStack.pop();
         if (ss.peek().varType == VarType.Non) {
-            //TODO : error
+            ErrorHandlerHelper.printError("Error was occurred");
         }
     }
 
@@ -354,7 +354,7 @@ public class CodeGenerator {
         ss.push(temp);
     }
 
-    public void lessThan() {
+    public void less_than() {
         Address temp = new Address(memory.getTemp(), VarType.Bool);
         Address s2 = ss.pop();
         Address s1 = ss.pop();
