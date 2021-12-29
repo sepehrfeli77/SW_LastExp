@@ -7,9 +7,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Stack;
 
-import Log.LogHelper;
-import codeGenerator.CodeGenerator;
-import errorHandler.ErrorHandlerHelper;
+import log.LogHelper;
+import code_generator.CodeGenerator;
+import error_handler.ErrorHandlerHelper;
 import scanner.LexicalAnalyzer;
 import scanner.token.Token;
 

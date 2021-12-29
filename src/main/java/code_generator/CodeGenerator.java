@@ -1,7 +1,7 @@
-package codeGenerator;
+package code_generator;
 
-import Log.LogHelper;
-import errorHandler.ErrorHandlerHelper;
+import log.LogHelper;
+import error_handler.ErrorHandlerHelper;
 import scanner.token.Token;
 import semantic.symbol.Symbol;
 import semantic.symbol.SymbolTable;
