@@ -11,6 +11,9 @@ public class LexicalAnalyzer {
 
     private Matcher matcher;
 
+    public Matcher getMatcher() {
+        return matcher;
+    }
 
     public LexicalAnalyzer(java.util.Scanner sc) {
         StringBuilder input = new StringBuilder();
@@ -18,7 +21,7 @@ public class LexicalAnalyzer {
             input.append(sc.nextLine());
         }
         StringBuilder tokenPattern = new StringBuilder();
-        for (Type tokenType : Type.values()){
+        for (Type tokenType : Type.values()) {
             tokenPattern.append(String.format("|(?<%s>%s)", tokenType.name(), tokenType.pattern));
         }
         Pattern expression = Pattern.compile(tokenPattern.substring(1));
@@ -27,23 +30,23 @@ public class LexicalAnalyzer {
 
     public Token getNextToken() {
 
-        while (matcher.find()) {
+        while (getMatcher().find()) {
             for (Type t : Type.values()) {
 
-                if (matcher.group(t.name()) != null) {
-                    if (matcher.group(Type.COMMENT.name()) != null) {
+                if (getMatcher().group(t.name()) != null) {
+                    if (getMatcher().group(Type.COMMENT.name()) != null) {
                         break;
 
                     }
-                    if(matcher.group(Type.ErrorID.name())!=null){
+                    if (getMatcher().group(Type.ErrorID.name()) != null) {
                         ErrorHandlerHelper.printError("The id must start with character");
                         break;
                     }
 
-                    return new Token(t, matcher.group(t.name()));
+                    return new Token(t, getMatcher().group(t.name()));
                 }
             }
         }
-        return new Token(Type.EOF,"$");
+        return new Token(Type.EOF, "$");
     }
 }
