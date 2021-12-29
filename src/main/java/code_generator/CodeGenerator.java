@@ -23,10 +23,11 @@ public class CodeGenerator {
         symbolTable = new SymbolTable(memory);
         //TODO
     }
-    public void printMemory()
-    {
+
+    public void printMemory() {
         memory.pintCodeBlock();
     }
+
     public void semanticFunction(int func, Token next) {
         LogHelper.print("codegenerator : " + func);
         switch (func) {
@@ -75,10 +76,10 @@ public class CodeGenerator {
                 save();
                 break;
             case 15:
-                _while();
+                whileMethod();
                 break;
             case 16:
-                jpf_save();
+                jpfSave();
                 break;
             case 17:
                 jpHere();
@@ -90,7 +91,7 @@ public class CodeGenerator {
                 equal();
                 break;
             case 20:
-                less_than();
+                lessThan();
                 break;
             case 21:
                 and();
@@ -228,14 +229,15 @@ public class CodeGenerator {
         try {
             symbolTable.getNextParam(className, methodName);
             ErrorHandlerHelper.printError("The few argument pass for method");
-        } catch (IndexOutOfBoundsException e) {}
+        } catch (IndexOutOfBoundsException e) {
+        }
         VarType t;
         if (symbolTable.getMethodReturnType(className, methodName) == SymbolType.Int) {
             t = VarType.Int;
         } else {
             t = VarType.Bool;
         }
-        Address temp = new Address(memory.getTemp(),t);
+        Address temp = new Address(memory.getTemp(), t);
         ss.push(temp);
         memory.add3AddressCode(Operation.ASSIGN, new Address(temp.num, VarType.Address, TypeAddress.Imidiate), new Address(symbolTable.getMethodReturnAddress(className, methodName), VarType.Address), null);
         memory.add3AddressCode(Operation.ASSIGN, new Address(memory.getCurrentCodeBlockAddress() + 2, VarType.Address, TypeAddress.Imidiate), new Address(symbolTable.getMethodCallerAddress(className, methodName), VarType.Address), null);
@@ -276,17 +278,17 @@ public class CodeGenerator {
 
     public void assign() {
 
-            Address s1 = ss.pop();
-            Address s2 = ss.pop();
+        Address s1 = ss.pop();
+        Address s2 = ss.pop();
 //        try {
-            if (s1.varType != s2.varType) {
-                ErrorHandlerHelper.printError("The type of operands in assign is different ");
-            }
+        if (s1.varType != s2.varType) {
+            ErrorHandlerHelper.printError("The type of operands in assign is different ");
+        }
 //        }catch (NullPointerException d)
 //        {
 //            d.printStackTrace();
 //        }
-            memory.add3AddressCode(Operation.ASSIGN, s1, s2, null);
+        memory.add3AddressCode(Operation.ASSIGN, s1, s2, null);
 
     }
 
@@ -302,7 +304,7 @@ public class CodeGenerator {
         arithmetic("In mult two operands must be integer", Operation.MULT);
     }
 
-    public void arithmetic(String text, Operation type){
+    public void arithmetic(String text, Operation type) {
         Address temp = new Address(memory.getTemp(), VarType.Int);
         Address s2 = ss.pop();
         Address s1 = ss.pop();
@@ -322,12 +324,12 @@ public class CodeGenerator {
         ss.push(new Address(memory.saveMemory(), VarType.Address));
     }
 
-    public void _while() {
+    public void whileMethod() {
         memory.add3AddressCode(ss.pop().num, Operation.JPF, ss.pop(), new Address(memory.getCurrentCodeBlockAddress() + 1, VarType.Address), null);
         memory.add3AddressCode(Operation.JP, ss.pop(), null, null);
     }
 
-    public void jpf_save() {
+    public void jpfSave() {
         Address save = new Address(memory.saveMemory(), VarType.Address);
         memory.add3AddressCode(ss.pop().num, Operation.JPF, ss.pop(), new Address(memory.getCurrentCodeBlockAddress(), VarType.Address), null);
         ss.push(save);
@@ -352,7 +354,7 @@ public class CodeGenerator {
         ss.push(temp);
     }
 
-    public void less_than() {
+    public void lessThan() {
         Address temp = new Address(memory.getTemp(), VarType.Bool);
         Address s2 = ss.pop();
         Address s1 = ss.pop();
