@@ -230,6 +230,7 @@ public class CodeGenerator {
             symbolTable.getNextParam(className, methodName);
             ErrorHandlerHelper.printError("The few argument pass for method");
         } catch (IndexOutOfBoundsException e) {
+            System.out.println(e.getMessage());
         }
         VarType t;
         if (symbolTable.getMethodReturnType(className, methodName) == SymbolType.Int) {
