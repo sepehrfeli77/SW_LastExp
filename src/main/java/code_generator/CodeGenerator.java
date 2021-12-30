@@ -76,7 +76,7 @@ public class CodeGenerator {
         LogHelper.print("codegenerator : " + func);
         switch (func) {
             case 0:
-                return;
+                break;
             case 1:
                 checkID();
                 break;
